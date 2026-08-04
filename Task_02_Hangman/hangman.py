@@ -9,26 +9,54 @@ print("=" * 50)
 chosen_word = random.choice(words)
 
 # Create hidden display
-display = []
+display = ["_"] * len(chosen_word)
 
-for letter in chosen_word:
-    display.append("_")
+# Game variables
+lives = 6
+guessed_letters = []
 
-print("\nHidden Word:")
-print(" ".join(display))
+while "_" in display and lives > 0:
 
-# --------------------------
-# Player Guess
-# --------------------------
+    print("\nWord:")
+    print(" ".join(display))
 
-guess = input("\nGuess a letter: ").lower()
+    print(f"\n❤️ Lives Remaining: {lives}")
 
-# Check if guessed letter exists
-for position in range(len(chosen_word)):
-    letter = chosen_word[position]
+    guess = input("Guess a letter: ").lower()
 
-    if letter == guess:
-        display[position] = guess
+    # Input validation
+    if len(guess) != 1 or not guess.isalpha():
+        print("❌ Please enter a single alphabet letter.")
+        continue
 
-print("\nUpdated Word:")
-print(" ".join(display))
+    # Prevent duplicate guesses
+    if guess in guessed_letters:
+        print("⚠️ You already guessed that letter.")
+        continue
+
+    guessed_letters.append(guess)
+
+    # Correct guess
+    if guess in chosen_word:
+
+        for position in range(len(chosen_word)):
+            if chosen_word[position] == guess:
+                display[position] = guess
+
+        print("✅ Correct Guess!")
+
+    else:
+        lives -= 1
+        print("❌ Wrong Guess!")
+
+# -------------------------
+# Game Result
+# -------------------------
+
+if "_" not in display:
+    print("\n🎉 Congratulations!")
+    print("You guessed the word:", chosen_word)
+
+else:
+    print("\n💀 Game Over!")
+    print("Correct word was:", chosen_word)
